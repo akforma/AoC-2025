@@ -8,6 +8,14 @@ p1 (x:xs) = checkId1 (map show x) + p1 xs
 p2 [] = 0
 p2 (x:xs) = checkId2 (map show x) + p2 xs
 
+-- accumulate if first half of ID is the same as second half
+checkId1 :: [String] -> Int
+checkId1 [] = 0
+checkId1 (x:xs)
+   | take (length x `div` 2) x == drop (length x `div` 2) x = (read :: String -> Int) x + checkId1 xs
+   | otherwise = checkId1 xs
+
+-- accumulate if the ID is made up of chunks of the same sequence of numbers
 checkId2 :: [String] -> Int
 checkId2 [] = 0
 checkId2 (x:xs) = helper 1 x + checkId2 xs
@@ -21,12 +29,6 @@ checkSame :: [String] -> Bool
 checkSame (x:xs:[]) = x == xs
 checkSame (x:xs:xss) = x == xs && checkSame (xs:xss)
 checkSame _ = True
-
-checkId1 :: [String] -> Int
-checkId1 [] = 0
-checkId1 (x:xs)
-   | take (length x `div` 2) x == drop (length x `div` 2) x = (read :: String -> Int) x + checkId1 xs
-   | otherwise = checkId1 xs
 
 main = do
    input <- readFile "input.txt"
